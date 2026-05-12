@@ -1,3 +1,16 @@
+// Take in the stable inputs and implement the clock
+// increment logic for seconds and minutes
+// --------------- INPUTS ---------------
+// clk_1hz: 1 Hz clock for normal counting
+// clk_2hz: 2 Hz clock for adjusting seconds/minutes
+// reset: resets the clock to 00:00
+// pause: stops the clock from incrementing
+// select: when in adjust mode, select whether to adjust seconds (1) or minutes (0)
+// adjust_mode: whether we are in adjust mode or not
+// --------------- OUTPUTS ---------------
+// seconds: current seconds value (0-59)
+// minutes: current minutes value (0-59)
+
 module clock_increment(
     input clk_1hz, // increment when adjust is off
     input clk_2hz, // increment when adjust is on
@@ -15,6 +28,7 @@ always @(posedge clk_1hz or posedge clk_2hz or posedge reset) begin
         seconds <= 0;
         minutes <= 0;
         adjust_mode <= 0; // Start in normal mode
+    // if we are in normal mode and the 1 Hz clock ticks, increment seconds
     end else if (clk_1hz && !adjust_mode) begin
         // Increment seconds in normal mode
         if (!pause) begin
@@ -33,6 +47,8 @@ always @(posedge clk_1hz or posedge clk_2hz or posedge reset) begin
                 seconds <= seconds + 1;
             end
         end
+    // else if we are in adjust mode and the 2 Hz clock ticks, 
+    // increment either seconds or minutes based on the select input
     end else if (clk_2hz && adjust_mode) begin
         // same logic but it increments at 2Hz when adjust mode is on
         if (!pause) begin
