@@ -1,6 +1,15 @@
+// Take in the master clock and divide it
+// into the various slower clocks needed
+// --------------- INPUTS ---------------
+// master_clk: 100 MHz clock from pin V10
+// --------------- OUTPUTS ---------------
+// clk_1hz: 1 Hz clock for normal counting
+// clk_2hz: 2 Hz clock for adjusting seconds/minutes
+// clk_fast: 500 Hz clock for debouncing buttons/switches
+// clk_blink: 3 Hz clock for blinking the display when paused in adjust mode
+
 module clock_divider(
     input master_clk,    // 100 MHz from pin V10
-    input reset,         // Button input
     output reg clk_1hz,
     output reg clk_2hz,
     output reg clk_fast, // 500 Hz
@@ -14,20 +23,10 @@ reg [19:0] count_fast;
 reg [19:0] count_blink;
 
 // activate on the positive edge of the master clock or when reset is pressed
-always @(posedge master_clk or posedge reset) begin
-    // if reset is pressed, reset the counter and output clock
-    if (reset) begin
-        count1 <= 0;
-        clk_1hz <= 0;
-        count2 <= 0;
-        clk_2hz <= 0;
-        count_fast <= 0;
-        clk_fast <= 0;
-        count_blink <= 0;
-        clk_blink <= 0;
+always @(posedge master_clk) begin
     // if the counter reaches the terminal count for 1Hz, toggle the output 
     // clock and reset the counter
-    end else if (count1 == 49_999_999) begin
+    if (count1 == 49_999_999) begin
         count1 <= 0;
         clk_1hz <= ~clk_1hz;
     // Same logic for 2Hz
