@@ -6,6 +6,8 @@ module stopwatch(
     input btnL, // left button input for reset
     input btnR, // right button input for pause
     input sw [1:0], // 2-bit switch input for select and adjust
+    output [6:0] seg, // 7-segment display output
+    output [3:0] an // 7-segment display anode control
 );
 
     // Internal signals
@@ -54,6 +56,13 @@ module stopwatch(
     );
 
     // 7-segment display driver to convert digits to segment outputs
-    seven_segment_driver seg_driver (
-        // tbd inputs and outputs of the seven segment driver module
+    display dis (
+        .seconds(seconds),
+        .minutes(minutes),
+        .select(select),
+        .adjust(adjust),
+        .clk_fast(clk_fast),
+        .clk_blink(clk_blink),
+        .seg(seg),
+        .an(an)
     );
