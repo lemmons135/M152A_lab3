@@ -17,6 +17,7 @@ module display_tb;
         .select(1'b0),
         .adjust(1'b0),
         .clk_fast(clk_fast), 
+        .clk_blink(1'b0),
         .seg(seg),
         .an(an)
     );
