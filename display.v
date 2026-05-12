@@ -8,6 +8,7 @@
             select          0 = minutes should blink, 1 = seconds should blink
             adjust          0 = normal operation, 1 = adjust mode
             clk_fast        the clock signal for refreshing (~500 Hz)
+            clk_blink       3Hz signal to blink on
  *
  * Outputs: seg[6:0]        Represents the current state of the seven segments
             an[3:0]         Represents the "on switch" for each of the four digits
@@ -19,6 +20,7 @@ module display (
     input select,
     input adjust,
     input clk_fast,
+    input clk_blink,
     output reg [6:0] seg,
     output reg [3:0] an
 );
@@ -38,8 +40,8 @@ module display (
         refresh_counter <= refresh_counter + 1;
     end
 
-    //activate current digit
     always @(*) begin
+        //activate current digit
         case(refresh_counter)
             2'b00: begin
                 //activate Digit 1 (XX:XN)
@@ -62,6 +64,19 @@ module display (
                 current_digit = m_tens;
             end
         endcase
+
+        //handle blinking
+        if (adjust) begin
+            //blinking is done by setting the anodes for those digits to the current state of clk_blink
+            if (select) begin
+                //blink seconds
+                an[0] = an[0] | clk_blink;  //using OR since anodes are reverse logic (0 = ON, 1 = OFF)
+                an[1] = an[1] | clk_blink;
+            end else begin
+                an[2] = an[2] | clk_blink;
+                an[3] = an[3] | clk_blink;
+            end
+        end
     end
 
 
