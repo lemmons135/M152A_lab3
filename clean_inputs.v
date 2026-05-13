@@ -10,9 +10,9 @@
 // reset: reset count to 0
 // pause: pause counting when adjust is on
 
-module inputs(
+module clean_inputs(
     input clk_fast, // 500 Hz (lower frequency for debouncing) clock input
-    input sw [1:0], // 2-bit switch input for select and adjust
+    input [1:0] sw, // 2-bit switch input for select and adjust
     input btnL,
     input btnR,
     output select, // select between seconds and minutes for adjustment

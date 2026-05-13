@@ -5,7 +5,7 @@ module stopwatch(
     input master_clk, // 100 MHz clock from pin V10
     input btnL, // left button input for reset
     input btnR, // right button input for pause
-    input sw [1:0], // 2-bit switch input for select and adjust
+    input [1:0] sw, // 2-bit switch input for select and adjust
     output [6:0] seg, // 7-segment display output
     output [3:0] an // 7-segment display anode control
 );
@@ -38,7 +38,7 @@ module stopwatch(
         .btnL(btnL),
         .btnR(btnR),
         .select(select),
-        .adjust(adjust),
+        .adjust_mode(adjust),
         .reset(reset),
         .pause(pause)
     );
@@ -48,9 +48,9 @@ module stopwatch(
         .clk_1hz(clk_1hz),
         .clk_2hz(clk_2hz),
         .reset(reset),
-        .pause(pause)
+        .pause(pause),
         .select(select),
-        .adjust(adjust),
+        .adjust_mode(adjust),
         .seconds(seconds),
         .minutes(minutes)
     );
@@ -66,3 +66,4 @@ module stopwatch(
         .seg(seg),
         .an(an)
     );
+endmodule
