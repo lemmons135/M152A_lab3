@@ -24,27 +24,41 @@ reg [19:0] count_blink;
 
 // activate on the positive edge of the master clock or when reset is pressed
 always @(posedge master_clk) begin
-    // if the counter reaches the terminal count for 1Hz, toggle the output 
-    // clock and reset the counter
+    // if the counter reaches the terminal count for 1Hz, toggle the output clock and reset the counter
     if (count1 == 49_999_999) begin
         count1 <= 0;
         clk_1hz <= ~clk_1hz;
-    // Same logic for 2Hz
-    end else if (count2 == 24_999_999) begin
-        count2 <= 0;
-        clk_2hz <= ~clk_2hz;
-    // Same logic for Fast Clock (500 Hz)
-    end else if (count_fast == 19_999) begin
-        count_fast <= 0;
-        clk_fast <= ~clk_fast;
-    // Same logic for Blink Clock (3 Hz)
-    end else if (count_blink == 16_666_666) begin
-        count_blink <= 0;
-        clk_blink <= ~clk_blink;
     end else begin
         count1 <= count1 + 1;
+    end
+end
+
+always @(posedge master_clk) begin
+    // Same logic for 2Hz
+    if (count2 == 24_999_999) begin
+        count2 <= 0;
+        clk_2hz <= ~clk_2hz;
+    end else begin
         count2 <= count2 + 1;
+    end
+end
+
+always @(posedge master_clk) begin
+    // Same logic for Fast Clock (500 Hz)
+    if (count_fast == 19_999) begin
+        count_fast <= 0;
+        clk_fast <= ~clk_fast;
+    end else begin
         count_fast <= count_fast + 1;
+    end
+end
+
+always @(posedge master_clk) begin
+    // Same logic for Blink Clock (3 Hz)
+    if (count_blink == 16_666_666) begin
+        count_blink <= 0;
+        clk_blink <= ~clk_blink;
+    end else begin 
         count_blink <= count_blink + 1;
     end
 end
