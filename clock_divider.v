@@ -45,7 +45,7 @@ end
 
 always @(posedge master_clk) begin
     // Same logic for Fast Clock (500 Hz)
-    if (count_fast == 19_999) begin
+    if (count_fast == 99_999) begin
         count_fast <= 0;
         clk_fast <= ~clk_fast;
     end else begin
