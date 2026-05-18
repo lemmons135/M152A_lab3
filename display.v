@@ -35,48 +35,45 @@ module display (
     assign m_ones = minutes % 10;
     assign m_tens = minutes / 10;
 
-
-    always @(posedge clk_fast) begin
-        refresh_counter <= refresh_counter + 1;
-    end
-
     always @(*) begin
-        //activate current digit
         case(refresh_counter)
             2'b00: begin
                 //activate Digit 1 (XX:XN)
-                an = 4'b1110;
+                if (adjust && select && clk_blink) begin
+                    base_an = 4'b1111;
+                end else begin
+                    base_an = 4'b1110;
+                end
                 current_digit = s_ones;
             end
             2'b01: begin
                 //activate Digit 2 (XX:NX)
-                an = 4'b1101;
+                if (adjust && select && clk_blink) begin
+                    base_an = 4'b1111;
+                end else begin
+                    base_an = 4'b1101;
+                end
                 current_digit = s_tens;
             end
             2'b10: begin
                 //activate Digit 3 (XN:XX)
-                an = 4'b1011;
+                if (adjust && !select && clk_blink) begin
+                    base_an = 4'b1111;
+                end else begin
+                    base_an = 4'b1011;
+                end
                 current_digit = m_ones;
             end
             2'b11: begin
                 //activate Digit 4 (NX:XX)
-                an = 4'b0111;
+                if (adjust && !select && clk_blink) begin
+                    base_an = 4'b1111;
+                end else begin
+                    base_an = 4'b0111;
+                end
                 current_digit = m_tens;
             end
         endcase
-
-        //handle blinking
-        if (adjust) begin
-            //blinking is done by setting the anodes for those digits to the current state of clk_blink
-            if (select) begin
-                //blink seconds
-                an[0] = an[0] | clk_blink;  //using OR since anodes are reverse logic (0 = ON, 1 = OFF)
-                an[1] = an[1] | clk_blink;
-            end else begin
-                an[2] = an[2] | clk_blink;
-                an[3] = an[3] | clk_blink;
-            end
-        end
     end
 
 
@@ -123,5 +120,9 @@ module display (
         endcase
     end
 
+    //move to next anode
+    always @(posedge clk_fast) begin
+        refresh_counter <= refresh_counter + 1;
+    end
 
 endmodule

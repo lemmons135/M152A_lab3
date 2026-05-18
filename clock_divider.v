@@ -19,8 +19,8 @@ module clock_divider(
 // Define counters here (size them based on terminal counts)
 reg [26:0] count1; 
 reg [25:0] count2;
-reg [19:0] count_fast;
-reg [19:0] count_blink;
+reg [25:0] count_fast;
+reg [25:0] count_blink;
 
 // activate on the positive edge of the master clock or when reset is pressed
 always @(posedge master_clk) begin
